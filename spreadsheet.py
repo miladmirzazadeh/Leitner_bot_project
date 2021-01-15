@@ -59,7 +59,7 @@ class SpreadSheetHandler():
 
     def iterate_on_sheet(self):
         for i in range(self.current_row+1 , len(self.sheet.col_values(1))+1):
-            if self.sheet.cell(i, SpreadSheetHandler.box_no_col).value in ["1", "2" , "3", "4", "5"]:
+            if self.sheet.cell(i, SpreadSheetHandler.box_no_col).value in ["","1", "2" , "3", "4", "5"]:
                 cell = self.sheet.cell(i, SpreadSheetHandler.remaining_day_col).value
                 if cell in ['', '1']:
                     if cell =='':
