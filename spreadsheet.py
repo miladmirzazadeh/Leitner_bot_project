@@ -52,6 +52,7 @@ class SpreadSheetHandler():
                 day_to_add = SpreadSheetHandler.boxes_days_dict[box_no]
                 self.sheet.update_cell(self.current_row, SpreadSheetHandler.remaining_day_col, day_to_add)
                 self.sheet.update_cell(self.current_row, SpreadSheetHandler.box_no_col, box_no)
+                # self.sheet.update_cell(self.current_row, SpreadSheetHandler.wrong_answers_col,)
 
         else:
             self.sheet.update_cell(self.current_row,SpreadSheetHandler.remaining_day_col, 1)
@@ -59,12 +60,14 @@ class SpreadSheetHandler():
 
     def iterate_on_sheet(self):
         for i in range(self.current_row+1 , len(self.sheet.col_values(1))+1):
-            if self.sheet.cell(i, SpreadSheetHandler.box_no_col).value in ["","1", "2" , "3", "4", "5"]:
+            box_no = self.sheet.cell(i, SpreadSheetHandler.box_no_col).value
+            if box_no in ["","1", "2" , "3", "4", "5"]:
                 cell = self.sheet.cell(i, SpreadSheetHandler.remaining_day_col).value
+                if box_no == "":
+                    self.sheet.update_cell(i, SpreadSheetHandler.box_no_col, "1")
                 if cell in ['', '1']:
                     if cell =='':
                         self.sheet.update_cell(i, SpreadSheetHandler.remaining_day_col, "1")
-                        self.sheet.update_cell(i, SpreadSheetHandler.box_no_col, "1")
                     self.current_row = i
                     return(1)
                 else:
