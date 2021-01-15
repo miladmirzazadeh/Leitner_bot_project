@@ -26,7 +26,6 @@ class Controller():
     def check_user_permission(self):
         allowed_users = CommandAnalyzer.allowed_users_sheet.sheet.col_values(1)
         if self.user_id in allowed_users:
-            print(user_id)
             return(True)
         else:
             return(False)
