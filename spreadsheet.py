@@ -64,6 +64,7 @@ class SpreadSheetHandler():
                 if cell in ['', '1']:
                     if cell =='':
                         self.sheet.update_cell(i, SpreadSheetHandler.remaining_day_col, "1")
+                        self.sheet.update_cell(i, SpreadSheetHandler.box_no_col, "1")
                     self.current_row = i
                     return(1)
                 else:
