@@ -2,10 +2,11 @@ from telegram import InlineQueryResultArticle, InputTextMessageContent, InlineKe
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
 import logging
 from CommandAnalyzer import *
+
 def main():
 
-    updater = Updater("1401820933:AAGO2YkaT6O9cMl3K9k5qj6VjArzxOKsmcI", use_context=True)
-    CommandAnalyzer.bot = Bot("1401820933:AAGO2YkaT6O9cMl3K9k5qj6VjArzxOKsmcI")
+    updater = Updater("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY", use_context=True)
+    CommandAnalyzer.bot = Bot("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY")
 
     dp = updater.dispatcher
 

@@ -22,7 +22,7 @@ class SpreadSheetHandler():
     box_no_col = 4
     wrong_answers_col = 5
     boxes_days_dict = {1:1, 2:2, 3:4, 4:8, 5:15, 6:100}
-    def __init__(self, owner_controller, api_file_name="client_secret", gfile_name="saved_words"):
+    def __init__(self, owner_controller=None, api_file_name="client_secret", gfile_name="saved_words"):
         self.owner_controller = owner_controller
         self.api_file_name = api_file_name
         self.gfile_name = gfile_name

@@ -23,18 +23,29 @@ class Controller():
         self.request = None
         self.callback = False
 
+    def check_user_permission(self):
+        allowed_users = CommandAnalyzer.allowed_users_sheet.sheet.col_values(1)
+        if self.user_id in allowed_users:
+            print(user_id)
+            return(True)
+        else:
+            return(False)
 
     def new_message(self, message, callback=False):
         self.callback = callback # to remain that what was the last message
         if message == "/start":
             self.show_message("خوش آمد گویی :) ")
-        if self.request == "gather_data":
+            if self.check_user_permission():
+                self.state = 0
+                self.db_handler = None
+                self.request = "gather_data"
+                self.gather_data()
+            else:
+                self.show_message("آیدی تو به بات دسترسی نداره. اگه دسترسی میخوای به @milad_mirzazadeh بگو بهت بده :)")
+        elif self.request == "gather_data":
             self.gather_data(message)
         elif self.db_handler == None:
-            self.state = 0
-            self.request = "gather_data"
-            self.show_message("شما هنوز ثبت نام نکردید")
-            self.gather_data()
+            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)")
 
         else:
             if message == "/show_card":
@@ -52,20 +63,20 @@ class Controller():
     def gather_data(self, input = None):
         if self.state == 0 :
             self.state = 1
-            self.show_message("اسم فایل رو وارد کنید")
+            self.show_message("اسم فایل رو وارد کن")
         elif self.state == 1 :
-            self.show_message("دارم سعی میکنم متصل بشم")
+            self.show_message("دارم سعی میکنم وصل بشم")
             self.gfile_name = input
             self.state = 0
             self.request = None
 
             try :
                 self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
-                self.show_message("متصل شدم :) با زدن /show_card میتونی شروع کنی")
+                self.show_message("وصل شدم :) با دستور /show_card میتونی کارت جدید بگیری")
             except:
                 self.api_file_name = None
                 self.gfile_name = None
-                self.show_message("ورودی های داده شده اشتباه اند")
+                self.show_message("یه مشکلی هست که معلوم نیست چیه")
 
 
 
@@ -114,7 +125,7 @@ class Controller():
         #there are two kinds of cards that should be asked in current day
         #the ones that their remaining day is 0 and the ones with empty remaining day cell
         all_cells = np.array(self.db_handler.sheet.get_all_values())
-        remaining_days = all_cells[:,2]
+        remaining_days = all_cells[self.db_handler.current_row:,2]
         remaining_cards = len(remaining_days[np.logical_or(remaining_days =='', remaining_days =='1')])
         self.show_message("{} تا باقیمونده. با دستور /show_card میتونی ادامه بدی".format(remaining_cards))
 
@@ -127,6 +138,7 @@ class Controller():
 
 
 class CommandAnalyzer():
+    allowed_users_sheet = SpreadSheetHandler(gfile_name="leitner_bot_allowed_users")
     user_objects = {}
     user_chatid = {}
     user_controller_objects = {}
