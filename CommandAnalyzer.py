@@ -116,7 +116,7 @@ class Controller():
         all_cells = np.array(self.db_handler.sheet.get_all_values())
         remaining_days = all_cells[:,2]
         remaining_cards = len(remaining_days[np.logical_or(remaining_days =='', remaining_days =='1')])
-        self.show_message(remaining_cards, " تا باقیمونده . با دستور /show_card میتونی ادامه بدی")
+        self.show_message("{} تا باقیمونده. با دستور /show_card میتونی ادامه بدی".format(remaining_cards))
 
     def finishing_day(self):
         self.db_handler.current_row = 1
