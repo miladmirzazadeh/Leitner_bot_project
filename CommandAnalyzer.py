@@ -110,12 +110,12 @@ class Controller():
 
 
     def check_answer(self, user_answer):
-        if user_answer == "correct_answer":
-            self.db_handler.change_card_state(was_correct = True)
-        elif user_answer == "wrong_answer":
-            self.db_handler.change_card_state(was_correct = False)
-        else:
-            self.show_message("متوجه نشدم")
+        # if user_answer == "correct_answer":
+        #     self.db_handler.change_card_state(was_correct = True)
+        # elif user_answer == "wrong_answer":
+        #     self.db_handler.change_card_state(was_correct = False)
+        # else:
+        #     self.show_message("متوجه نشدم")
         var = self.db_handler.iterate_on_sheet()
         if var != 0 :
             self.show_new_card(new_message=False)
