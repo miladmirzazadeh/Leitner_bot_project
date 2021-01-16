@@ -1,6 +1,6 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-
+import numpy as np
 # use creds to create a client to interact with the Google Drive API
 # scope = ['https://www.googleapis.com/auth/drive']
 # creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
@@ -16,6 +16,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 
 class SpreadSheetHandler():
+    batch_size =10
     word_col = 1
     translation_col = 2
     remaining_day_col = 3
@@ -30,15 +31,23 @@ class SpreadSheetHandler():
         self.creds = ServiceAccountCredentials.from_json_keyfile_name('{}.json'.format(api_file_name), self.scope)
         self.client = gspread.authorize(self.creds)
         self.sheet = self.client.open(self.gfile_name).get_worksheet(0)
-        self.current_row = 1
+        self.current_array_row = 0 # np array indexes start with 0
+        self.current_file_row = 1 # spreadsheet file indexes start with 1
+        self.local_words_array = []
+
 
     def update_sheet(self):
         self.sheet = self.client.open(self.gfile_name)[self.sheet_name]
 
     def new_card(self):
-        word = self.sheet.cell(self.current_row, SpreadSheetHandler.word_col).value
-        translation = self.sheet.cell(self.current_row, SpreadSheetHandler.translation_col).value
-        return(word, translation)
+        if len(self.local_words_array) == 0:
+            self.get_new_batch()
+        if len(self.local_words_array[self.current_array_row]) == 4 and self.local_words_array[self.current_array_row][SpreadSheetHandler.remaining_day_col-1] in ["", "1"]:
+            word = self.local_words_array[self.current_array_row][SpreadSheetHandler.word_col-1]
+            translation = self.local_words_array[self.current_array_row][SpreadSheetHandler.translation_col - 1]
+            return(word, translation)
+        else:
+            return("", "")
 
     def change_card_state(self, was_correct= True):
         ''' description: this function will change remaining_day and box_num after user answer it
@@ -46,36 +55,54 @@ class SpreadSheetHandler():
                  move to next box (add days depending on box_num) '''
 
         if was_correct:
-            box_no = int(self.sheet.cell(self.current_row, SpreadSheetHandler.box_no_col).value)
+            box_no = int(self.local_words_array[self.current_array_row][SpreadSheetHandler.box_no_col-1])
             if(box_no in SpreadSheetHandler.boxes_days_dict):
                 box_no += 1
                 day_to_add = SpreadSheetHandler.boxes_days_dict[box_no]
-                self.sheet.update_cell(self.current_row, SpreadSheetHandler.remaining_day_col, day_to_add)
-                self.sheet.update_cell(self.current_row, SpreadSheetHandler.box_no_col, box_no)
+                self.local_words_array[self.current_array_row][SpreadSheetHandler.remaining_day_col-1] = str(day_to_add)
+                self.local_words_array[self.current_array_row][SpreadSheetHandler.box_no_col-1] = str(box_no)
                 # self.sheet.update_cell(self.current_row, SpreadSheetHandler.wrong_answers_col,)
 
         else:
-            self.sheet.update_cell(self.current_row,SpreadSheetHandler.remaining_day_col, 1)
-            self.sheet.update_cell(self.current_row,SpreadSheetHandler.box_no_col, 1)
+            self.local_words_array[self.current_array_row][SpreadSheetHandler.remaining_day_col-1] = "1"
+            self.local_words_array[self.current_array_row][SpreadSheetHandler.box_no_col - 1] = "1"
 
-    def iterate_on_sheet(self):
-        for i in range(self.current_row+1 , len(self.sheet.col_values(1))+1):
-            box_no = self.sheet.cell(i, SpreadSheetHandler.box_no_col).value
+    def iterate_on_words(self):
+        print(self.current_array_row)
+        for i in range(self.current_array_row+1, len(self.local_words_array)):
+            if len(self.local_words_array[i]) < 4:
+                for q in range(len(self.local_words_array[i]), 4):
+                    self.local_words_array[i].append("")
+            box_no = self.local_words_array[i][SpreadSheetHandler.box_no_col-1]
             if box_no in ["","1", "2" , "3", "4", "5"]:
-                cell = self.sheet.cell(i, SpreadSheetHandler.remaining_day_col).value
+                remaining_day = self.local_words_array[i][SpreadSheetHandler.remaining_day_col-1] # we reduce 1 from remaining_day_col because indexes in np array are different with gfile indexes
                 if box_no == "":
-                    self.sheet.update_cell(i, SpreadSheetHandler.box_no_col, "1")
-                if cell in ['', '1']:
-                    if cell =='':
-                        self.sheet.update_cell(i, SpreadSheetHandler.remaining_day_col, "1")
-                    self.current_row = i
+                    self.local_words_array[i][SpreadSheetHandler.box_no_col-1] = "1"
+                if remaining_day in ['', '1']:
+                    if remaining_day =='':
+                        self.local_words_array[i][SpreadSheetHandler.remaining_day_col - 1] = "1"
+                    self.current_array_row = i
                     return(1)
                 else:
-                    remaining_day = int(cell) - 1
-                    self.sheet.update_cell(i, SpreadSheetHandler.remaining_day_col, remaining_day)
+                    new_remaining_day = int(remaining_day) - 1
+                    self.local_words_array[i][SpreadSheetHandler.remaining_day_col - 1] = str(new_remaining_day)
+        return(self.get_new_batch())
+    def get_new_batch(self): # and update previous batch in gfile
+        print("from", self.current_file_row, "hasd;kfja;sdlkfja;sldkfja;dlkfj;aslkdfja;ldkfja;slkdfj;aslkdfjs;dlfkjas;dlkfjasdf")
+        print("getttttttttttttttttttt newwwwwwwwwwwwwwwwwwww")
+        self.current_array_row = 0
+        arr_len = len(self.local_words_array)
+        if arr_len>1:
+            self.sheet.update("A{}:D{}".format(self.current_file_row-arr_len, self.current_file_row-1), self.local_words_array) #updating gfile
+        batch_size = min(SpreadSheetHandler.batch_size, len(self.sheet.col_values(1))-self.current_file_row+1)
+        if batch_size >= 0 :
+            self.local_words_array = self.sheet.get("A{}:D{}".format(self.current_file_row, self.current_file_row+batch_size-1))
+            self.current_file_row = self.current_file_row+ batch_size
+            return(1)
+        else: # end of the file
+            self.owner_controller.finishing_day()
+            return(0)
 
-        self.owner_controller.finishing_day()
-        return (0)
 
 
 
