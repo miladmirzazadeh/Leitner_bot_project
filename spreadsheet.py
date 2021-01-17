@@ -68,7 +68,6 @@ class SpreadSheetHandler():
             self.local_words_array[self.current_array_row][SpreadSheetHandler.box_no_col - 1] = "1"
 
     def iterate_on_words(self):
-        print(self.current_array_row)
         for i in range(self.current_array_row+1, len(self.local_words_array)):
             if len(self.local_words_array[i]) < 4:
                 for q in range(len(self.local_words_array[i]), 4):
@@ -82,6 +81,7 @@ class SpreadSheetHandler():
                     if remaining_day =='':
                         self.local_words_array[i][SpreadSheetHandler.remaining_day_col - 1] = "1"
                     self.current_array_row = i
+                    print(self.current_array_row)
                     return(1)
                 else:
                     new_remaining_day = int(remaining_day) - 1
@@ -94,9 +94,11 @@ class SpreadSheetHandler():
         arr_len = len(self.local_words_array)
         if arr_len>1:
             self.sheet.update("A{}:D{}".format(self.current_file_row-arr_len, self.current_file_row-1), self.local_words_array) #updating gfile
-        batch_size = min(SpreadSheetHandler.batch_size, len(self.sheet.col_values(1))-self.current_file_row+1)
-        if batch_size >= 0 :
+        batch_size = min(SpreadSheetHandler.batch_size, len(self.sheet.col_values(1))-(self.current_file_row-1))
+        print("batch size calculated to :         " , batch_size)
+        if batch_size > 0 :
             self.local_words_array = self.sheet.get("A{}:D{}".format(self.current_file_row, self.current_file_row+batch_size-1))
+            print("local_words_array changed to : ", self.local_words_array)
             self.current_file_row = self.current_file_row+ batch_size
             return(1)
         else: # end of the file

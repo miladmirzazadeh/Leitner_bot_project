@@ -44,7 +44,7 @@ class Controller():
         elif self.request == "gather_data":
             self.gather_data(message)
         elif self.db_handler == None:
-            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)")
+            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)" + "\n" + "helllo")
 
         else:
             if message == "/show_card":
@@ -95,18 +95,20 @@ class Controller():
         keyboard = [[InlineKeyboardButton("دیدن جواب", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if self.current_word != "":
+            print("empty word = False")
             self.show_message(self.current_word, reply_markup, edit=not new_message)
-
         else:
             var = self.db_handler.iterate_on_words()
             if var != 0:
-                self.show_new_card()
+                print("empty word = True")
+                self.show_new_card(new_message=not self.callback)
 
 
     def show_answer(self):
         keyboard = [[InlineKeyboardButton("بلد بودم", callback_data='correct_answer')],
                     [InlineKeyboardButton("بلد نبودم", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
+        print(str(self.current_translation))
         self.show_message(self.current_translation, reply_markup, edit=True)
 
 
@@ -135,7 +137,7 @@ class Controller():
         self.db_handler.current_file_row = 1
         self.db_handler.current_array_row = 0
         self.db_handler.local_words_array = np.array([])
-        self.show_message("برای امروز کارتی باقی نمونده :) با دستور /show_card میتونی روز بعد رو شروع کنی:))", edit=True)
+        self.show_message("برای امروز کارتی باقی نمونده :) با دستور /show_card میتونی روز بعد رو شروع کنی:))", edit=self.callback)
 
 
 
