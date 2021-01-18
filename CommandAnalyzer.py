@@ -113,8 +113,9 @@ class Controller():
 
 
     def check_answer(self, user_answer):
-        print(self.db_handler.local_words_array)
 
+        var = self.db_handler.iterate_on_sheet()
+        print(self.db_handler.local_words_array)
         if user_answer == "correct_answer":
             self.db_handler.change_card_state(was_correct = True)
         elif user_answer == "wrong_answer":
