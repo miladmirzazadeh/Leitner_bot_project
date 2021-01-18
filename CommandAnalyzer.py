@@ -44,7 +44,7 @@ class Controller():
         elif self.request == "gather_data":
             self.gather_data(message)
         elif self.db_handler == None:
-            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)")
+            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)" + "\n" + "helllo")
 
         else:
             if message == "/show_card":
@@ -60,22 +60,23 @@ class Controller():
 
 
     def gather_data(self, input = None):
-        if self.state == 0 :
-            self.state = 1
-            self.show_message("اسم فایل رو وارد کن")
-        elif self.state == 1 :
-            self.show_message("دارم سعی میکنم وصل بشم")
-            self.gfile_name = input
-            self.state = 0
-            self.request = None
+        # if self.state == 0 :
+        #     self.state = 1
+        #     self.show_message("اسم فایل رو وارد کن")
+        # elif self.state == 1 :
+        self.show_message("دارم سعی میکنم وصل بشم")
+        self.gfile_name = input
+        self.state = 0
+        self.request = None
 
-            try :
-                self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
-                self.show_message("وصل شدم :) با دستور /show_card میتونی کارت جدید بگیری")
-            except:
-                self.api_file_name = None
-                self.gfile_name = None
-                self.show_message("یه مشکلی هست که معلوم نیست چیه")
+        try :
+            # self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
+            self.db_handler = SpreadSheetHandler(self)
+            self.show_message("وصل شدم :) با دستور /show_card میتونی کارت جدید بگیری")
+        except:
+            self.api_file_name = None
+            self.gfile_name = None
+            self.show_message("یه مشکلی هست که معلوم نیست چیه")
 
 
 
@@ -94,29 +95,34 @@ class Controller():
         keyboard = [[InlineKeyboardButton("دیدن جواب", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if self.current_word != "":
+            print("empty word = False")
             self.show_message(self.current_word, reply_markup, edit=not new_message)
-
         else:
-            var = self.db_handler.iterate_on_sheet()
+            var = self.db_handler.iterate_on_words()
             if var != 0:
-                self.show_new_card()
+                print("empty word = True")
+                self.show_new_card(new_message=not self.callback)
 
 
     def show_answer(self):
         keyboard = [[InlineKeyboardButton("بلد بودم", callback_data='correct_answer')],
                     [InlineKeyboardButton("بلد نبودم", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
+        print(str(self.current_translation))
         self.show_message(self.current_translation, reply_markup, edit=True)
 
 
     def check_answer(self, user_answer):
-        # if user_answer == "correct_answer":
-        #     self.db_handler.change_card_state(was_correct = True)
-        # elif user_answer == "wrong_answer":
-        #     self.db_handler.change_card_state(was_correct = False)
-        # else:
-        #     self.show_message("متوجه نشدم")
+
         var = self.db_handler.iterate_on_sheet()
+        print(self.db_handler.local_words_array)
+        if user_answer == "correct_answer":
+            self.db_handler.change_card_state(was_correct = True)
+        elif user_answer == "wrong_answer":
+            self.db_handler.change_card_state(was_correct = False)
+        else:
+            self.show_message("متوجه نشدم")
+        var = self.db_handler.iterate_on_words()
         if var != 0 :
             self.show_new_card(new_message=False)
 
@@ -129,8 +135,10 @@ class Controller():
         self.show_message("{} تا باقیمونده. با دستور /show_card میتونی ادامه بدی".format(remaining_cards))
 
     def finishing_day(self):
-        self.db_handler.current_row = 1
-        self.show_message("برای امروز کارتی باقی نمونده :) با دستور /show_card میتونی روز بعد رو شروع کنی:))", edit=True)
+        self.db_handler.current_file_row = 1
+        self.db_handler.current_array_row = 0
+        self.db_handler.local_words_array = np.array([])
+        self.show_message("برای امروز کارتی باقی نمونده :) با دستور /show_card میتونی روز بعد رو شروع کنی:))", edit=self.callback)
 
 
 
