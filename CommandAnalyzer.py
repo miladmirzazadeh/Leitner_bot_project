@@ -33,18 +33,18 @@ class Controller():
     def new_message(self, message, callback=False):
         self.callback = callback # to remain that what was the last message
         if message == "/start":
-            self.show_message("خوش آمد گویی :) ")
+            self.show_message("Welcoming :)")
             if self.check_user_permission():
                 self.state = 0
                 self.db_handler = None
                 self.request = "gather_data"
                 self.gather_data()
             else:
-                self.show_message("آیدی تو به بات دسترسی نداره. اگه دسترسی میخوای به @milad_mirzazadeh بگو بهت بده :)")
+                self.show_message("Your telegram id is not allowed\nYou can ask for access from @milad_mirzazadeh")
         elif self.request == "gather_data":
             self.gather_data(message)
         elif self.db_handler == None:
-            self.show_message("ربات هنوز برات فعال نشده. با دستور /start میتونی شروع کنی :)" + "\n" + "helllo")
+            self.show_message("The Bot is not activated yet. \nYou can activate it by /start")
 
         else:
             if message == "/show_card":
@@ -56,7 +56,7 @@ class Controller():
             elif message == "/remaining":
                 self.show_remaining_cards()
             else:
-                self.show_message("متوجه نشدم")
+                self.show_message("Didn't understand")
 
 
     def gather_data(self, input = None):
@@ -72,11 +72,11 @@ class Controller():
         try :
             # self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
             self.db_handler = SpreadSheetHandler(self)
-            self.show_message("وصل شدم :) با دستور /show_card میتونی کارت جدید بگیری")
+            self.show_message("Connected to the sheet. \nYou can start by /show_card")
         except:
             self.api_file_name = None
             self.gfile_name = None
-            self.show_message("یه مشکلی هست که معلوم نیست چیه")
+            self.show_message("There is a problem, and I don't know what it is")
 
 
 
@@ -105,8 +105,8 @@ class Controller():
 
 
     def show_answer(self):
-        keyboard = [[InlineKeyboardButton("بلد بودم", callback_data='correct_answer')],
-                    [InlineKeyboardButton("بلد نبودم", callback_data='wrong_answer')]]
+        keyboard = [[InlineKeyboardButton("got correct", callback_data='correct_answer')],
+                    [InlineKeyboardButton("got wrong", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         print(str(self.current_translation))
         self.show_message(self.current_translation, reply_markup, edit=True)
@@ -120,24 +120,24 @@ class Controller():
         elif user_answer == "wrong_answer":
             self.db_handler.change_card_state(was_correct = False)
         else:
-            self.show_message("متوجه نشدم")
+            self.show_message("Didn't understand")
         var = self.db_handler.iterate_on_words()
         if var != 0 :
             self.show_new_card(new_message=False)
 
     def show_remaining_cards(self):
         #there are two kinds of cards that should be asked in current day
-        #the ones that their remaining day is 0 and the ones with empty remaining day cell
+        #the ones that their remaining day is 0 and the ones buy empty remaining day cell
         all_cells = np.array(self.db_handler.sheet.get_all_values())
         remaining_days = all_cells[self.db_handler.current_row:,2]
         remaining_cards = len(remaining_days[np.logical_or(remaining_days =='', remaining_days =='1')])
-        self.show_message("{} تا باقیمونده. با دستور /show_card میتونی ادامه بدی".format(remaining_cards))
+        self.show_message("{} cards has been remaining for today. \nContinue buy /show_card".format(remaining_cards))
 
     def finishing_day(self):
         self.db_handler.current_file_row = 1
         self.db_handler.current_array_row = 0
         self.db_handler.local_words_array = np.array([])
-        self.show_message("برای امروز کارتی باقی نمونده :) با دستور /show_card میتونی روز بعد رو شروع کنی:))", edit=self.callback)
+        self.show_message("No card has remained for today:) \nYou can start next day buy /show_card", edit=self.callback)
 
 
 
@@ -188,7 +188,7 @@ class CommandAnalyzer():
                 CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup)
 
         except:
-            CommandAnalyzer.user_controller_objects[user_id].show_message("ظاهرا ورودی اشتباهی به سیستم داده شده")
+            CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
 
 
 
