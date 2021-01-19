@@ -64,7 +64,7 @@ class Controller():
         #     self.state = 1
         #     self.show_message("اسم فایل رو وارد کن")
         # elif self.state == 1 :
-        self.show_message("دارم سعی میکنم وصل بشم")
+        self.show_message("Connecting ... ")
         self.gfile_name = input
         self.state = 0
         self.request = None
@@ -92,7 +92,7 @@ class Controller():
 
     def show_new_card(self, new_message=True):
         self.prepare_new_card()
-        keyboard = [[InlineKeyboardButton("دیدن جواب", callback_data='show_translation')]]
+        keyboard = [[InlineKeyboardButton("see translation", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if self.current_word != "":
             print("empty word = False")
