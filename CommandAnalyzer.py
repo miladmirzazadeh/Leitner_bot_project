@@ -128,7 +128,7 @@ class Controller():
         #there are two kinds of cards that should be asked in current day
         #the ones that their remaining day is 0 and the ones buy empty remaining day cell
         all_cells = np.array(self.db_handler.sheet.get_all_values())
-        remaining_days = all_cells[self.db_handler.current_row:,2]
+        remaining_days = all_cells[self.db_handler.current_file_row:,2]
         remaining_cards = len(remaining_days[np.logical_or(remaining_days =='', remaining_days =='1')])
         self.show_message("{} cards has been remaining for today. \nContinue buy /show_card".format(remaining_cards))
 

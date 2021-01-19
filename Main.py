@@ -7,7 +7,6 @@ def main():
 
     updater = Updater("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY", use_context=True)
     CommandAnalyzer.bot = Bot("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY")
-
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler(["start", "main_menu"], CommandAnalyzer.handle_new_message))
