@@ -33,7 +33,7 @@ class Controller():
     def new_message(self, message, callback=False):
         self.callback = callback # to remain that what was the last message
         if message == "/start":
-            self.show_message(" \xF0\x9F\x98\x81 GRINNING FACE WITH SMILING EYES Welcoming :)")
+            self.show_message("Welcoming :)")
             if self.check_user_permission():
                 self.state = 0
                 self.db_handler = None
@@ -106,7 +106,7 @@ class Controller():
 
 
     def show_answer(self):
-        keyboard = [[InlineKeyboardButton("I knew this word \xF0\x9F\x98\x8E", callback_data='correct_answer')],
+        keyboard = [[InlineKeyboardButton("I knew this word 😎", callback_data='correct_answer')],
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         print(str(self.current_translation))
