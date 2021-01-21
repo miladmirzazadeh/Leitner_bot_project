@@ -33,7 +33,7 @@ class Controller():
     def new_message(self, message, callback=False):
         self.callback = callback # to remain that what was the last message
         if message == "/start":
-            self.show_message("Welcoming :)")
+            self.show_message(" \xF0\x9F\x98\x81 GRINNING FACE WITH SMILING EYES Welcoming :)")
             if self.check_user_permission():
                 self.state = 0
                 self.db_handler = None
@@ -60,23 +60,24 @@ class Controller():
 
 
     def gather_data(self, input = None):
-        # if self.state == 0 :
-        #     self.state = 1
-        #     self.show_message("اسم فایل رو وارد کن")
-        # elif self.state == 1 :
-        self.show_message("Connecting ... ")
-        self.gfile_name = input
-        self.state = 0
-        self.request = None
+        if self.state == 0 :
+            self.state = 1
+            self.show_message("What is your google_file name?")
+        elif self.state == 1 :
+            self.gfile_name = input
+            self.show_message("Connecting ... ")
+            self.gfile_name = input
+            self.state = 0
+            self.request = None
 
-        try :
-            # self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
-            self.db_handler = SpreadSheetHandler(self)
-            self.show_message("Connected to the sheet. \nYou can start by /show_card")
-        except:
-            self.api_file_name = None
-            self.gfile_name = None
-            self.show_message("There is a problem, and I don't know what it is")
+            try :
+                # self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
+                self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
+                self.show_message("Connected to the sheet. \nYou can start by /show_card")
+            except:
+                self.api_file_name = None
+                self.gfile_name = None
+                self.show_message("There is a problem, and I don't know what it is")
 
 
 
@@ -105,8 +106,8 @@ class Controller():
 
 
     def show_answer(self):
-        keyboard = [[InlineKeyboardButton("got correct", callback_data='correct_answer')],
-                    [InlineKeyboardButton("got wrong", callback_data='wrong_answer')]]
+        keyboard = [[InlineKeyboardButton("I knew this word \xF0\x9F\x98\x8E", callback_data='correct_answer')],
+                    [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         print(str(self.current_translation))
         self.show_message(self.current_translation, reply_markup, edit=True)
