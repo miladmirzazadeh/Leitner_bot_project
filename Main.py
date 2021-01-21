@@ -5,8 +5,8 @@ from CommandAnalyzer import *
 
 def main():
 
-    updater = Updater("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY", use_context=True)
-    CommandAnalyzer.bot = Bot("1331375766:AAGNzkSJmuBPfeNm0I-5-BqETVNMKa6hfsY")
+    updater = Updater("1533725125:AAEtbFSzER39mljSCCKda6ybvpb6K1NrpRY", use_context=True)
+    CommandAnalyzer.bot = Bot("1533725125:AAEtbFSzER39mljSCCKda6ybvpb6K1NrpRY")
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler(["start", "main_menu"], CommandAnalyzer.handle_new_message))
