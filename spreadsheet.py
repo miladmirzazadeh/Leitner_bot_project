@@ -28,7 +28,7 @@ class SpreadSheetHandler():
         self.api_file_name = api_file_name
         self.gfile_name = gfile_name
         self.scope = ['https://www.googleapis.com/auth/drive']
-        self.creds = ServiceAccountCredentials.from_json_keyfile_name('api_file.json', self.scope)
+        self.creds = ServiceAccountCredentials.from_json_keyfile_name(self.api_file_name, self.scope)
         self.client = gspread.authorize(self.creds)
         self.sheet = self.client.open(self.gfile_name).get_worksheet(0)
         self.current_array_row = 0 # np array indexes start with 0
