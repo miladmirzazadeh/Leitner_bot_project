@@ -96,12 +96,10 @@ class Controller():
         keyboard = [[InlineKeyboardButton("see translation", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if self.current_word != "":
-            print("empty word = False")
             self.show_message(self.current_word, reply_markup, edit=not new_message)
         else:
             var = self.db_handler.iterate_on_words()
             if var != 0:
-                print("empty word = True")
                 self.show_new_card(new_message=not self.callback)
 
 
@@ -109,7 +107,6 @@ class Controller():
         keyboard = [[InlineKeyboardButton("I knew this word 😎", callback_data='correct_answer')],
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        print(str(self.current_translation))
         self.show_message(self.current_translation, reply_markup, edit=True)
 
 
@@ -158,7 +155,6 @@ class CommandAnalyzer():
             user_id = update.callback_query.from_user.username
         else:
             user_id = update.message.from_user.username
-        print(user_id)
         if user_id not in CommandAnalyzer.user_chatid:
             CommandAnalyzer.user_chatid[user_id] = update.message.chat_id
             CommandAnalyzer.user_controller_objects[user_id] = Controller(user_id)

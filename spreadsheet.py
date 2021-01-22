@@ -98,9 +98,7 @@ class SpreadSheetHandler():
             self.sheet.update("A{}:D{}".format(self.current_file_row-arr_len, self.current_file_row-1), self.local_words_array) #updating gfile
         batch_size = min(SpreadSheetHandler.batch_size, len(self.sheet.col_values(1))-(self.current_file_row-1))
         if batch_size > 0 :
-            print("get from{} to {}".format(self.current_file_row, self.current_file_row + batch_size - 1))
             self.local_words_array = self.sheet.get("A{}:D{}".format(self.current_file_row, self.current_file_row+batch_size-1))
-            print("local_words_array changed to : ", self.local_words_array)
             self.current_file_row = self.current_file_row+ batch_size
             return(1)
         else: # end of the file
