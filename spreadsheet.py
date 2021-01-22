@@ -42,6 +42,9 @@ class SpreadSheetHandler():
     def new_card(self):
         if len(self.local_words_array) == 0:
             self.get_new_batch()
+        if len(self.local_words_array[self.current_array_row]) < 4:
+            for q in range(len(self.local_words_array[self.current_array_row]), 4):
+                self.local_words_array[self.current_array_row].append("")
         if len(self.local_words_array[self.current_array_row]) == 4 and self.local_words_array[self.current_array_row][SpreadSheetHandler.remaining_day_col-1] in ["", "1"]:
             word = self.local_words_array[self.current_array_row][SpreadSheetHandler.word_col-1]
             translation = self.local_words_array[self.current_array_row][SpreadSheetHandler.translation_col - 1]
