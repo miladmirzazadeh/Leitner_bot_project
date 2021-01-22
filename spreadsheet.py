@@ -16,7 +16,7 @@ import numpy as np
 
 
 class SpreadSheetHandler():
-    batch_size =10
+    batch_size =20
     word_col = 1
     translation_col = 2
     remaining_day_col = 3
@@ -81,22 +81,21 @@ class SpreadSheetHandler():
                     if remaining_day =='':
                         self.local_words_array[i][SpreadSheetHandler.remaining_day_col - 1] = "1"
                     self.current_array_row = i
-                    print(self.current_array_row)
+
                     return(1)
                 else:
                     new_remaining_day = int(remaining_day) - 1
                     self.local_words_array[i][SpreadSheetHandler.remaining_day_col - 1] = str(new_remaining_day)
         return(self.get_new_batch())
     def get_new_batch(self): # and update previous batch in gfile
-        print("from", self.current_file_row, "hasd;kfja;sdlkfja;sldkfja;dlkfj;aslkdfja;ldkfja;slkdfj;aslkdfjs;dlfkjas;dlkfjasdf")
-        print("getttttttttttttttttttt newwwwwwwwwwwwwwwwwwww")
+
         self.current_array_row = 0
         arr_len = len(self.local_words_array)
         if arr_len>1:
             self.sheet.update("A{}:D{}".format(self.current_file_row-arr_len, self.current_file_row-1), self.local_words_array) #updating gfile
         batch_size = min(SpreadSheetHandler.batch_size, len(self.sheet.col_values(1))-(self.current_file_row-1))
-        print("batch size calculated to :         " , batch_size)
         if batch_size > 0 :
+            print("get from{} to {}".format(self.current_file_row, self.current_file_row + batch_size - 1))
             self.local_words_array = self.sheet.get("A{}:D{}".format(self.current_file_row, self.current_file_row+batch_size-1))
             print("local_words_array changed to : ", self.local_words_array)
             self.current_file_row = self.current_file_row+ batch_size
