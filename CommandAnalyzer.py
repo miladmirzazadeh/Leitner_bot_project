@@ -40,7 +40,7 @@ class Controller():
                 self.request = "gather_data"
                 self.gather_data()
             else:
-                self.show_message("Your telegram id is not allowed\nYou can ask for access from @milad_mirzazadeh")
+                self.show_message("Your telegram id is not allowed\nYou can ask @milad_mirzazadeh for access ")
         elif self.request == "gather_data":
             self.gather_data(message)
         elif self.db_handler == None:
@@ -73,7 +73,7 @@ class Controller():
             try :
                 # self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
                 self.db_handler = SpreadSheetHandler(self, gfile_name=self.gfile_name)
-                self.show_message("Connected to the sheet. \nYou can start by /show_card")
+                self.show_message("Connected to the sheet 😍 \nYou can start by /show_card")
             except:
                 self.api_file_name = None
                 self.gfile_name = None
@@ -134,7 +134,7 @@ class Controller():
         self.db_handler.current_file_row = 1
         self.db_handler.current_array_row = 0
         self.db_handler.local_words_array = np.array([])
-        self.show_message("No card has remained for today:) \nYou can start next day buy /show_card", edit=self.callback)
+        self.show_message("No card has remained for today:) \nYou can start next day by /show_card", edit=self.callback)
 
 
 
