@@ -183,6 +183,7 @@ class CommandAnalyzer():
 
     def edit_message_text(user_id, message, reply_markup=None, parse_mode=None):
         # try:
+        print("hi")
         if CommandAnalyzer.user_controller_objects[user_id].callback:
             CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
         else:
