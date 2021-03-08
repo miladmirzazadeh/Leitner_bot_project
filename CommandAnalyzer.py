@@ -182,14 +182,14 @@ class CommandAnalyzer():
 
 
     def edit_message_text(user_id, message, reply_markup=None, parse_mode=None):
-        try:
-            if CommandAnalyzer.user_controller_objects[user_id].callback:
-                CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
-            else:
-                CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
+        # try:
+        if CommandAnalyzer.user_controller_objects[user_id].callback:
+            CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
+        else:
+            CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
 
-        except:
-            CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
+        # except:
+        #     CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
 
 
 
