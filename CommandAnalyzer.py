@@ -185,9 +185,9 @@ class CommandAnalyzer():
         # try:
         print("hi")
         if CommandAnalyzer.user_controller_objects[user_id].callback:
-            CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=None)
+            CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
         else:
-            CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=None)
+            CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
 
         # except:
         #     CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
