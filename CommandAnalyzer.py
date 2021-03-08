@@ -96,7 +96,10 @@ class Controller():
         keyboard = [[InlineKeyboardButton("see translation", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if self.current_word != "":
-            self.show_message(self.current_word, reply_markup, edit=not new_message)
+            answer_len = len(self.current_translation)
+            spaces = "".join([" " for space in range (answer_len)])
+            word = "{}  \n--------------- \n {}.".format(self.current_word, spaces)
+            self.show_message(word, reply_markup, edit=not new_message)
         else:
             var = self.db_handler.iterate_on_words()
             if var != 0:
@@ -107,7 +110,7 @@ class Controller():
         keyboard = [[InlineKeyboardButton("I knew this word 😎", callback_data='correct_answer')],
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        answer = "{}  \n---------------\ntranslation: \n*{}*".format(self.current_word, self.current_translation)
+        answer = "{}  \n--------------- \n*{}*".format(self.current_word, self.current_translation)
         self.show_message(answer, reply_markup, edit=True)
 
 
