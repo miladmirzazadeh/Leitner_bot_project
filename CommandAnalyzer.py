@@ -92,7 +92,6 @@ class Controller():
         self.current_word, self.current_translation = self.db_handler.new_card()
 
     def show_new_card(self, new_message=True):
-        print("helooooooooooooooooooo")
         self.prepare_new_card()
         keyboard = [[InlineKeyboardButton("see translation", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -109,7 +108,6 @@ class Controller():
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         answer = self.current_word + "/n" + " _____________" + "translation: /n" + "*bold* {}".format(self.current_translation)
-        print(answer)
         self.show_message(answer, reply_markup, edit=True)
 
 
@@ -177,7 +175,7 @@ class CommandAnalyzer():
 
 
     def show_to_user(user_id, text, reply_markup = None):
-        CommandAnalyzer.bot.send_message(chat_id=CommandAnalyzer.user_chatid[user_id], text=text, reply_markup= reply_markup)
+        CommandAnalyzer.bot.send_message(chat_id=CommandAnalyzer.user_chatid[user_id], text=text, reply_markup= reply_markup, parse_mode= ParseMode.MARKDOWN)
 
 
 
