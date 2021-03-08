@@ -82,11 +82,11 @@ class Controller():
 
 
 
-    def show_message(self, message, reply_markup=None, edit=False):
+    def show_message(self, message, reply_markup=None, edit=False, parse_mode=None):
         if not edit:
-            CommandAnalyzer.show_to_user(self.user_id, message, reply_markup)
+            CommandAnalyzer.show_to_user(self.user_id, message, reply_markup, parse_mode)
         else:
-            CommandAnalyzer.edit_message_text(self.user_id, message, reply_markup)
+            CommandAnalyzer.edit_message_text(self.user_id, message, reply_markup, parse_mode)
 
     def prepare_new_card(self):
         self.current_word, self.current_translation = self.db_handler.new_card()
@@ -108,7 +108,7 @@ class Controller():
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         answer = self.current_word + "/n" + " _____________" + "translation: /n" + "*bold* {}".format(self.current_translation)
-        self.show_message(answer, reply_markup, edit=True)
+        self.show_message(answer, reply_markup, edit=True, parse_mode=ParseMode.MARKDOWN)
 
 
     def check_answer(self, user_answer):
@@ -174,19 +174,19 @@ class CommandAnalyzer():
 
 
 
-    def show_to_user(user_id, text, reply_markup = None):
-        CommandAnalyzer.bot.send_message(chat_id=CommandAnalyzer.user_chatid[user_id], text=text, reply_markup= reply_markup, parse_mode= ParseMode.MARKDOWN)
+    def show_to_user(user_id, text, reply_markup = None, parse_mode=None):
+        CommandAnalyzer.bot.send_message(chat_id=CommandAnalyzer.user_chatid[user_id], text=text, reply_markup=reply_markup, parse_mode=parse_mode)
 
 
 
 
 
-    def edit_message_text(user_id, message, reply_markup=None):
+    def edit_message_text(user_id, message, reply_markup=None, parse_mode=None):
         try:
             if CommandAnalyzer.user_controller_objects[user_id].callback:
-                CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup)
+                CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
             else:
-                CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup)
+                CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=parse_mode)
 
         except:
             CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
