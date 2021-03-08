@@ -108,6 +108,7 @@ class Controller():
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         answer = self.current_word + "/n" + " _____________" + "translation: /n" + "*bold* {}".format(self.current_translation)
+        print(answer)
         self.show_message(answer, reply_markup, edit=True, parse_mode=ParseMode.MARKDOWN)
 
 
