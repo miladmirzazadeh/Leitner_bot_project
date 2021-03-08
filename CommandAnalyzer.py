@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-from telegram import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from telegram import InlineQueryResultArticle, InputTextMessageContent, InlineKeyboardButton, InlineKeyboardMarkup, Bot, ParseMode
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
 import logging
 
@@ -107,7 +107,8 @@ class Controller():
         keyboard = [[InlineKeyboardButton("I knew this word 😎", callback_data='correct_answer')],
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        self.show_message(self.current_translation, reply_markup, edit=True)
+        answer = self.current_word + "/n" + " _____________" + "translation: /n" + "*bold* {}".format(self.current_translation)
+        self.show_message(self.answer, reply_markup, edit=True, parse_mode=ParseMode.MARKDOWN)
 
 
     def check_answer(self, user_answer):
@@ -132,7 +133,7 @@ class Controller():
         current_row = self.db_handler.current_file_row - SpreadSheetHandler.batch_size + self.db_handler.current_array_row
         remaining_days = all_cells[current_row:,2]
         remaining_cards = len(remaining_days[np.logical_or(remaining_days =='', remaining_days =='1')])
-        self.show_message("{} cards has been remaining for today. \nContinue buy /show_card".format(remaining_cards))
+        self.show_message("{} cards has been remaining for today. \nContinue by /show_card".format(remaining_cards))
 
     def finishing_day(self):
         self.db_handler.current_file_row = 1
