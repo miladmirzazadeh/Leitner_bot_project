@@ -92,6 +92,7 @@ class Controller():
         self.current_word, self.current_translation = self.db_handler.new_card()
 
     def show_new_card(self, new_message=True):
+        print("helooooooooooooooooooo")
         self.prepare_new_card()
         keyboard = [[InlineKeyboardButton("see translation", callback_data='show_translation')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -109,7 +110,7 @@ class Controller():
         reply_markup = InlineKeyboardMarkup(keyboard)
         answer = self.current_word + "/n" + " _____________" + "translation: /n" + "*bold* {}".format(self.current_translation)
         print(answer)
-        self.show_message(answer, reply_markup, edit=True, parse_mode=ParseMode.MARKDOWN)
+        self.show_message(answer, reply_markup, edit=True)
 
 
     def check_answer(self, user_answer):
