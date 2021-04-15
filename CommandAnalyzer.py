@@ -110,7 +110,7 @@ class Controller():
         keyboard = [[InlineKeyboardButton("I knew this word 😎", callback_data='correct_answer')],
                     [InlineKeyboardButton("Didn't know this word 🤦‍♂️", callback_data='wrong_answer')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        answer = "{}  \n--------------- \n*{}*".format(self.current_word, self.current_translation)
+        answer = "{}  \n--------------- \n{}".format(self.current_word, self.current_translation)
         self.show_message(answer, reply_markup, edit=True)
 
 
@@ -123,7 +123,7 @@ class Controller():
         else:
             self.show_message("Didn't understand")
         var = self.db_handler.iterate_on_words()
-        if var != 0 :
+        if var != 0:
             self.show_new_card(new_message=False)
 
     def show_remaining_cards(self):
@@ -185,13 +185,13 @@ class CommandAnalyzer():
 
 
     def edit_message_text(user_id, message="hello", reply_markup=None):
-        try:
-            if CommandAnalyzer.user_controller_objects[user_id].callback:
-                CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
-            else:
-                CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+        # try:
+        if CommandAnalyzer.user_controller_objects[user_id].callback:
+            CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup)
+        else:
+            CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup)
 
-        except:
+        # except:
             CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
 
 
