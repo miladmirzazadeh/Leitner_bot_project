@@ -185,13 +185,13 @@ class CommandAnalyzer():
 
 
     def edit_message_text(user_id, message="hello", reply_markup=None):
-        # try:
-        if CommandAnalyzer.user_controller_objects[user_id].callback:
-            CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup)
-        else:
-            CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup)
+        try:
+            if CommandAnalyzer.user_controller_objects[user_id].callback:
+                CommandAnalyzer.user_controller_objects[user_id].update.callback_query.edit_message_text(message, reply_markup=reply_markup)
+            else:
+                CommandAnalyzer.user_controller_objects[user_id].update.message.edit_text(message, reply_markup=reply_markup)
 
-        # except:
+        except:
             CommandAnalyzer.user_controller_objects[user_id].show_message("It seems you have entered a wrong input")
 
 
